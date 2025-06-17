@@ -10,7 +10,7 @@ def hash_password(password: str) -> str:
         str: hashed password with salting
     """
     
-    return bcrypt.hashpw(password.encode("UTF-8", bcrypt.gensalt())).decode("UTF-8")
+    return bcrypt.hashpw(password.encode("UTF-8"), bcrypt.gensalt()).decode("UTF-8")
 
 
 def check_password(password: str, hashed_password: str) -> bool:
