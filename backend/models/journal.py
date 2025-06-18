@@ -11,7 +11,7 @@ class JournalEntry(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, index=True, default=lambda: str(uuid.uuid4()))
     title = Column(String, nullable=False)
     content = Column(Text, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow(), nullable=False)
 
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
     user = relationship("User", backref="journal_entries")
