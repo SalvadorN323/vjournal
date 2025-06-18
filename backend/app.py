@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import models
@@ -18,7 +17,7 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
     
-    oauth = OAuth2PasswordBearer(tokenUrl='token')
+    
     
     
     Base.metadata.drop_all(bind=engine)
