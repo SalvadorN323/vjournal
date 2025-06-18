@@ -1,6 +1,7 @@
 from pydantic import BaseModel, EmailStr
 import uuid
 
+
 class UserBase(BaseModel):
     username: str
     email: EmailStr
