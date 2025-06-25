@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import models
 from database.database import engine, Base
-from routes import auth_router
+from routes import auth_router, journal_router
 
 
 def create_app() -> FastAPI:
@@ -24,12 +24,11 @@ def create_app() -> FastAPI:
     Base.metadata.create_all(bind=engine)
     
     app.include_router(auth_router, prefix="/auth", tags=["auth"])
+    app.include_router(journal_router, prefix="/journal", tags=["journal"])
     
     
     return app    
     
-
-
 
 if __name__ == "__main__":
     app = create_app()

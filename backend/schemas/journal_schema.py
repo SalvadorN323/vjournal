@@ -10,9 +10,9 @@ class JournalEntryCreate(JounralEntryBase):
     pass
 
 class JournalEntryResponse(JounralEntryBase):
+    user_id: uuid.UUID
     id: uuid.UUID
     created_at: datetime
-    user_id: uuid.UUID
     
     class Config:
         orm_mode = True
