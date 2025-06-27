@@ -17,12 +17,12 @@ def create_journal(journal: JournalEntryCreate, db: db_dependency, user: User = 
     db.refresh(journal_data)
 
 
-def get_journals(db: db_dependency, user: User = Depends(get_current_user)) -> list[JournalEntryResponse]:
+def get_journals_all(db: db_dependency, user: User = Depends(get_current_user)) -> list[JournalEntryResponse]:
     return db.query(JournalEntry).filter(JournalEntry.user_id == user.id).all()
     
     
 
-def get_journal_by_title(title: str, db: db_dependency, user: User = Depends(get_current_user)) -> JournalEntryResponse | None:
+def get_journal_by_titles(title: str, db: db_dependency, user: User = Depends(get_current_user)) -> JournalEntryResponse:
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User is not authenticated")
     journal = db.query(JournalEntry).filter(JournalEntry.title == title).first()

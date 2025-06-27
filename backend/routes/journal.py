@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from helper.journal_logic import get_journals, create_journal, get_journal_by_title , update_journal, delete_journal
+from helper.journal_logic import get_journals_all, create_journal, get_journal_by_titles , update_journal, delete_journal
 from schemas.journal_schema import JournalEntryCreate, JournalEntryResponse
 from database.database import db_dependency
 from helper.token import get_current_user
@@ -19,8 +19,8 @@ async def create_journal_entry(db: db_dependency,
     return {"detail": "Journal entry created successfully!"}
     
 @journal_router.get("/get-journals", response_model=list[JournalEntryResponse])
-async def get_jounrnals(db: db_dependency, user: User = Depends(get_current_user)) -> list[JournalEntryResponse]:
-    journals = get_journals(db, user)
+async def get_journals(db: db_dependency, user: User = Depends(get_current_user)) -> list[JournalEntryResponse]:
+    journals = get_journals_all(db, user)
     if not journals: 
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No jounrals found!")
     return journals        
@@ -29,7 +29,7 @@ async def get_jounrnals(db: db_dependency, user: User = Depends(get_current_user
 async def get_journal_by_title(journal_title: str, 
                                 db: db_dependency, 
                                 user: User = Depends(get_current_user)) -> JournalEntryResponse:
-    journal = get_journal_by_title(journal_title, db, user)
+    journal = get_journal_by_titles(journal_title, db, user)
     if not journal:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Journal entry not found")
     return journal
