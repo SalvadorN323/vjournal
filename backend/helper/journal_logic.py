@@ -22,12 +22,33 @@ def get_journals(db: db_dependency, user: User = Depends(get_current_user)) -> l
     
     
 
-def get_journal_by_id():
-    pass
+def get_journal_by_title(title: str, db: db_dependency, user: User = Depends(get_current_user)) -> JournalEntryResponse | None:
+    if not user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User is not authenticated")
+    journal = db.query(JournalEntry).filter(JournalEntry.title == title).first()
+    return journal
 
 
-def update_journal():
-    pass
+def update_journal(db: db_dependency, title: str, journal: JournalEntryCreate, user: User = Depends(get_current_user)) -> None:
+    if not user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User is not authenticated")
+    existing_journal = db.query(JournalEntry).filter(JournalEntry.title == title, JournalEntry.user_id == user.id).first()
+    if not existing_journal:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Journal entry not found")
+    
+    existing_journal.title = journal.title
+    existing_journal.content = journal.content
+    db.commit()
+    db.refresh(existing_journal)
+    
 
-def delete_journal():
-    pass
+def delete_journal(title: str, db: db_dependency, user: User = Depends(get_current_user)) -> dict:
+    if not user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User is not authenticated")
+    journal = db.query(JournalEntry).filter(JournalEntry.title == title).first()
+    if not journal:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Journal entry not found")
+    
+    db.delete(journal)
+    db.commit()
+    return {"message": "Journal entry deleted successfully"}
